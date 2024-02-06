@@ -147,6 +147,8 @@ pub struct UsartConfig {
     #[cfg(not(feature = "f4"))]
     /// Optionally, disable the overrun functionality. Defaults to `false`.
     pub overrun_disabled: bool,
+    /// Driver enable mode. Defaults to `false`.
+    pub driver_enable: bool,
 }
 
 impl Default for UsartConfig {
@@ -161,6 +163,7 @@ impl Default for UsartConfig {
             fifo_enabled: true,
             #[cfg(not(feature = "f4"))]
             overrun_disabled: false,
+            driver_enable: false,
         }
     }
 }
@@ -240,6 +243,11 @@ where
                 }
             }
         });
+
+        result
+            .regs
+            .cr3
+            .modify(|_, w| w.dem().bit(result.config.driver_enable));
 
         // todo: Workaround due to a PAC bug, where M0 is missing.
         #[cfg(any(feature = "f3", feature = "f4"))]
