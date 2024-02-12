@@ -244,10 +244,10 @@ where
             }
         });
 
-        result
-            .regs
-            .cr3
-            .modify(|_, w| w.dem().bit(result.config.driver_enable));
+        result.regs.cr3.modify(|_, w| {
+            w.dem().bit(result.config.driver_enable);
+            w.onebit().bit(true)
+        });
 
         // todo: Workaround due to a PAC bug, where M0 is missing.
         #[cfg(any(feature = "f3", feature = "f4"))]
