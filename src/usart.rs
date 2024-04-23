@@ -712,14 +712,14 @@ where
         // When the number of data transfers programmed in the DMA Controller is reached, the DMA
         // controller generates an interrupt on the DMA channel interrupt vector.
     }
-    //
-    // /// Flush the transmit buffer.
-    // pub fn flush(&self) {
-    //     #[cfg(not(feature = "f4"))]
-    //     while isr!(self.regs).read().tc().bit_is_clear() {}
-    //     #[cfg(feature = "f4")]
-    //     while self.regs.sr.read().tc().bit_is_clear() {}
-    // }
+
+    /// Flush the transmit buffer.
+    pub fn flush(&self) {
+        #[cfg(not(feature = "f4"))]
+        while isr!(self.regs).read().tc().bit_is_clear() {}
+        #[cfg(feature = "f4")]
+        while self.regs.sr.read().tc().bit_is_clear() {}
+    }
 
     #[cfg(not(feature = "f4"))]
     /// Enable a specific type of interrupt. See G4 RM, Table 349: USART interrupt requests.
