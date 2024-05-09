@@ -245,8 +245,13 @@ where
         });
 
         result.regs.cr3.modify(|_, w| {
-            w.dem().bit(result.config.driver_enable);
+            w.dem().bit(true);
             w.onebit().bit(true)
+        });
+
+        result.regs.cr1.modify(|_, w| {
+            w.deat().bits(0x08);
+            w.dedt().bits(0x08);
         });
 
         // todo: Workaround due to a PAC bug, where M0 is missing.
