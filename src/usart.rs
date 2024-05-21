@@ -250,8 +250,8 @@ where
         });
 
         result.regs.cr1.modify(|_, w| {
-            w.deat().bits(0x08);
-            w.dedt().bits(0x08);
+            w.deat().bits(0x10);
+            w.dedt().bits(0x10)
         });
 
         // todo: Workaround due to a PAC bug, where M0 is missing.
@@ -335,6 +335,18 @@ where
     pub fn disable(&mut self) {
         cr1!(self.regs).modify(|_, w| w.ue().clear_bit());
         while cr1!(self.regs).read().ue().bit_is_set() {}
+    }
+
+    /// Enable this U[s]ART Receiver.
+    pub fn enable_receiver(&mut self) {
+        cr1!(self.regs).modify(|_, w| w.re().set_bit());
+        while cr1!(self.regs).read().re().bit_is_clear() {}
+    }
+
+    /// Disable this U[s]ART receiver.
+    pub fn disable_receiver(&mut self) {
+        cr1!(self.regs).modify(|_, w| w.re().clear_bit());
+        while cr1!(self.regs).read().re().bit_is_set() {}
     }
 
     /// Set the BAUD rate. Called during init, and can be called later to change BAUD
